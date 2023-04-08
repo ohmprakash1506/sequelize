@@ -16,10 +16,28 @@ const PostModel = require("./module/post.js");
 //*creating a record
 
 app.post("/create-post", (req, res) => {
-  PostModel.create({
-    name: "Sam",
-    email_id: "sam123@gmail.com",
-  })
+  PostModel.bulkCreate([
+    {
+      name: "Sam",
+      email_id: "sam123@gmail.com",
+    },
+    {
+      name: "Adam",
+      email_id: "adamsmith@gmail.com",
+    },
+    {
+      name: "Vector",
+      email_id: "vector@gmail.com",
+    },
+    {
+      name: "Jonas",
+      email_id: "jonas@gmail.com",
+    },
+    {
+      name: "flash",
+      email_id: "flash@gmail.com",
+    },
+  ])
     .then((result) => {
       return res.json({ message: `Record created successfully` });
     })
@@ -33,7 +51,7 @@ app.post("/create-post", (req, res) => {
 
 app.get("/get-latest-post", (req, res) => {
   PostModel.findOne({
-    attributes: ["user_id", "name"],
+    attributes: ["user_id", "name", "email_id"],
     where: {
       user_id: 4,
     },
@@ -51,7 +69,7 @@ app.get("/get-latest-post", (req, res) => {
 
 app.get("/get-all-post", (req, res) => {
   PostModel.findAll({
-    attributes: ["user_id", "name"],
+    attributes: ["user_id", "name", "email_id"],
   })
     .then((result) => {
       return res.json(result);
@@ -100,6 +118,22 @@ app.delete("/delete", (req, res) => {
       return res.json({
         message: `Record not deleted`,
       });
+    });
+});
+//*deleting all data from the table
+
+app.delete("/delete-all", (req, res) => {
+  PostModel.destroy({
+    where: {},
+    truncate: true,
+  })
+    .then((result) => {
+      console.log(`Records deleted from table`);
+      return res.json({ message: `Database records deleted` });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.json({ message: `Error while deleting records` });
     });
 });
 
